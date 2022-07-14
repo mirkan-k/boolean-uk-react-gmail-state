@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Header from './components/header'
 
 import initialEmails from './data/emails'
@@ -6,7 +7,31 @@ import './styles/app.css'
 
 function App() {
   // Use initialEmails for state
-  console.log(initialEmails)
+  // console.log(initialEmails)
+
+  const [emails, setEmails] = useState(initialEmails)
+
+  const toggleStarred = (email) => {
+    const newEmails = emails.map(initEmail => {
+      if (initEmail === email) {
+        return {...initEmail, starred: !initEmail.starred}
+      }
+      return initEmail
+    })
+    setEmails(newEmails)
+    // console.log(emails)
+  }
+
+  const toggleRead = (email) => {
+    const newEmails = emails.map(initEmail => {
+      if (initEmail === email) {
+        return {...initEmail, read: !initEmail.read}
+      }
+      return initEmail
+    })
+    setEmails(newEmails)
+    // console.log(emails)
+  }
 
   return (
     <div className="app">
@@ -39,7 +64,32 @@ function App() {
           </li>
         </ul>
       </nav>
-      <main className="emails">{/* Render a list of emails here */}</main>
+      <main className="emails">{
+        emails.map((email) => (
+          <li className="email" key={email.id}>
+            <div className="select">
+              <input
+                className="select-checkbox"
+                type="checkbox"
+                checked={email.read}
+                onChange={() => toggleRead(email)}
+                />
+            </div>
+
+            <div className="star">
+              <input
+                className="star-checkbox"
+                type="checkbox"
+                checked={email.starred}
+                onChange={() => toggleStarred(email)}
+              />
+            </div>
+
+            <div className="sender">{email.sender}</div>
+            <div className="title">{email.title}</div>
+          </li>
+        ))
+      }</main>
     </div>
   )
 }
